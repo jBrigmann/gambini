@@ -92,8 +92,7 @@ h1{
 .tree li:first-child::before{border:0 none}
 .tree li:last-child::after{border:0 none}
 .tree li:last-child::before{border-right:1px solid var(--rule)}
-.tree li:only-child{padding-top:0}
-.tree li:only-child::before,.tree li:only-child::after{display:none}
+.tree li:only-child::before{display:none}
 .tree ul.root>li{padding-top:0}
 .tree ul.root>li::before,.tree ul.root>li::after{display:none}
 .node{display:inline-block;position:relative}
@@ -102,6 +101,7 @@ h1{
 .person{
   display:inline-block;white-space:nowrap;cursor:pointer;
   padding:.22em .45em;line-height:1.32;border-radius:5px;
+  min-height:78px;   /* altezza comune: tiene le generazioni sulla stessa riga */
   transition:background .15s,color .15s;
 }
 .person:hover{background:rgba(44,93,128,.09)}
@@ -165,13 +165,13 @@ h1{
 <header>
   <div class="tit">
     <h1>Famiglia Gambini</h1>
-    <span class="meta">58 persone &middot; otto generazioni &middot; 1820&ndash;2026</span>
+    <span class="meta">58 persone &middot; otto generazioni &middot; 1790&ndash;2026</span>
   </div>
   <div class="find">
     <input id="q" type="search" placeholder="Cerca una persona" autocomplete="off" aria-label="Cerca una persona nell'albero">
     <div class="results" id="res" role="listbox"></div>
   </div>
-  <button class="dedica" id="dedica"><span class="ico">&#10022;</span> per Luca, nato il 31 luglio 2026</button>
+  <button class="dedica" id="dedica"><span class="ico">&#10022;</span> Per Luca, l'ultimo nato.</button>
 </header>
 
 <div id="viewport" tabindex="0" aria-label="Albero genealogico: trascina per spostarti, usa i cerchietti per aprire i rami">
