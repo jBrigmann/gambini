@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Famiglia Gambini — albero genealogico</title>
+<style>
+:root{
+  --ink:#202122;          /* testo e linee, come Wikipedia */
+  --muted:#54595d;
+  --hair:#c8ccd1;
+  --bg:#ffffff;
+  --gold-bg:#fcf6e0;
+  --gold-line:#e2d49c;
+  --step:26px;            /* altezza dei connettori verticali */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+
+/* ---------- intestazione ---------- */
+header{
+  padding:20px 26px 16px;border-bottom:1px solid var(--hair);
+  flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 28px;
+}
+header h1{
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  font-weight:600;font-size:clamp(24px,4vw,34px);letter-spacing:.01em;
+}
+header .sub{color:var(--muted);font-size:14px}
+header .dedica{
+  margin-left:auto;font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  font-style:italic;font-size:15px;
+  background:var(--gold-bg);border:1px solid var(--gold-line);
+  border-radius:999px;padding:4px 14px;white-space:nowrap;
+}
+@media (max-width:640px){ header .dedica{margin-left:0} }
+
+/* ---------- area albero con pan e zoom ---------- */
+#viewport{
+  flex:1 1 auto;position:relative;overflow:hidden;cursor:grab;
+  touch-action:none;outline:none;
+}
+#viewport.grabbing{cursor:grabbing}
+#canvas{position:absolute;top:0;left:0;transform-origin:0 0;padding:40px 60px}
+
+/* ---------- albero: nodi di testo e linee sottili ---------- */
+.tree ul{display:flex;justify-content:center;padding-top:var(--step);position:relative;list-style:none}
+.tree ul.root{padding-top:0}
+.tree ul:not(.root)::before{
+  content:"";position:absolute;top:0;left:50%;height:var(--step);
+  border-left:1px solid var(--ink);
+}
+.tree li{position:relative;text-align:center;padding:var(--step) 10px 0}
+.tree li::before,.tree li::after{
+  content:"";position:absolute;top:0;right:50%;
+  border-top:1px solid var(--ink);width:50%;height:var(--step);
+}
+.tree li::after{right:auto;left:50%;border-left:1px solid var(--ink)}
+.tree li:first-child::before{border:0 none}
+.tree li:last-child::after{border:0 none}
+.tree li:last-child::before{border-right:1px solid var(--ink)}
+.tree li:only-child{padding-top:0}
+.tree li:only-child::before,.tree li:only-child::after{display:none}
+.tree ul.root>li{padding-top:0}
+.tree ul.root>li::before,.tree ul.root>li::after{display:none}
+
+.person{display:inline-block;max-width:13em;padding:.15em .45em;font-size:15px;line-height:1.32}
+.person .n{display:block}
+.person .d{display:block;font-style:italic;font-size:12.5px}
+.person.hl{background:var(--gold-bg);border:1px solid var(--gold-line);border-radius:5px}
+
+/* ---------- comandi e legenda ---------- */
+#controls{
+  position:absolute;right:16px;bottom:16px;display:flex;gap:1px;
+  border:1px solid var(--hair);border-radius:8px;overflow:hidden;
+  background:var(--hair);box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+#controls button{
+  border:0;background:#fff;color:var(--ink);font:16px/1 inherit;
+  padding:9px 14px;cursor:pointer;min-width:42px;
+}
+#controls button:hover{background:#f2f3f4}
+#controls button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+#legend{
+  position:absolute;left:16px;bottom:16px;color:var(--muted);
+  font-size:12px;background:rgba(255,255,255,.92);padding:4px 10px;
+  border:1px solid var(--hair);border-radius:6px;
+}
+#hint{
+  position:absolute;left:50%;top:14px;transform:translateX(-50%);
+  font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.94);
+  border:1px solid var(--hair);border-radius:999px;padding:5px 14px;
+  transition:opacity .6s;pointer-events:none;white-space:nowrap;
+}
+@media (prefers-reduced-motion:reduce){ #hint{transition:none} }
+@media (max-width:640px){ #legend{display:none} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Famiglia Gambini</h1>
+  <span class="sub">La discendenza di Antonio Gambini attraverso otto generazioni</span>
+  <span class="dedica">per Luca, nato il 31 luglio 2026</span>
+</header>
+
+<div id="viewport" tabindex="0" aria-label="Albero genealogico. Trascina per spostarti, usa più e meno per lo zoom.">
+  <div id="canvas" class="tree"><ul class="root"><li><div class="person"><span class="n">Antonio Gambini</span><span class="d">*? †?</span></div><ul><li><div class="person"><span class="n">Luigi Gambini</span><span class="d">*~1820 † ante 28.IX.1879</span><span class="d">⚭ Maddalena Cozzi</span><span class="d">*? †?</span></div><ul><li><div class="person"><span class="n">Giuseppe</span><span class="d">*1.I.1847 †1900</span><span class="d">⚭ Rosa Trezzi</span><span class="d">*? †?</span></div><ul><li><div class="person"><span class="n">(♀) Nomen nescio</span><span class="d">*~1869 †?</span></div></li><li><div class="person"><span class="n">(♀) Nomen nescio</span><span class="d">*~1873 †?</span></div></li><li><div class="person"><span class="n">Teresa</span><span class="d">*12.III.1892 †?</span><span class="d">⚭ Antonio Angelo Bonfante</span><span class="d">*11.V.1881</span></div><ul><li><div class="person"><span class="n">Giuseppe Giovanni</span><span class="d">*19.IX.1921 †?</span></div></li></ul></li></ul></li><li><div class="person"><span class="n">Francesco</span><span class="d">*1848 †1.XII.1901</span><span class="d">⚭ Maria Selmi</span><span class="d">*1853 †1.II.1932</span></div><ul><li><div class="person"><span class="n">Carlo</span><span class="d">*1883 †26.VI.1885</span></div></li></ul></li><li><div class="person"><span class="n">Ercole</span><span class="d">*1851 †?</span><span class="d">⚭ Catterina Colnaghi</span><span class="d">*1859 †?</span></div><ul><li><div class="person"><span class="n">Luigi</span><span class="d">*V.1889 †11.III.1890</span></div></li></ul></li><li><div class="person"><span class="n">Giuseppa</span><span class="d">*1853 †3.X.1931</span><span class="d">⚭ Pietro Torriani</span><span class="d">*1840 †10.V.1899</span></div><ul><li><div class="person"><span class="n">Carolina</span><span class="d">*1876 †?</span><span class="d">⚭ Enrico Monti</span><span class="d">*24.X.1873 †2.VI.1949</span></div><ul><li><div class="person"><span class="n">Pietro Luigi</span><span class="d">*23.II.1901 †12.X.1942</span></div></li><li><div class="person"><span class="n">Luigi</span><span class="d">*1903 †18.III.1933</span></div></li><li><div class="person"><span class="n">Maria Luisa</span><span class="d">*7.III.1911 †1999</span><span class="d">⚭ Vittorio Rizzi</span><span class="d">*1902 †1979</span></div><ul><li><div class="person"><span class="n">(♂) Nomen nescio</span><span class="d">*? †?</span><span class="d">⚭ Emanuela Crespi</span><span class="d">*9.IX.1954 †8.II.2017</span></div><ul><li><div class="person"><span class="n">Ludovica</span><span class="d">*?</span></div></li></ul></li></ul></li></ul></li><li><div class="person"><span class="n">Maria</span><span class="d">*1881 †18.IV.1900</span></div></li><li><div class="person"><span class="n">Luigi</span><span class="d">*1882 †2.V.1887</span></div></li><li><div class="person"><span class="n">Rodolfo</span><span class="d">*1884 †22.II.1887</span></div></li><li><div class="person"><span class="n">Maddalena</span><span class="d">*1889 †?</span><span class="d">⚭ Giuseppe Antonio Monti</span><span class="d">*1883 †20.III.1940</span></div></li><li><div class="person"><span class="n">Ida</span><span class="d">*1891 †?</span><span class="d">⚭ Giuseppe Guassardo</span><span class="d">*1886 †?</span></div></li></ul></li><li><div class="person"><span class="n">Rodolfo</span><span class="d">*21.IX.1855 †8.III.1928</span><span class="d">⚭ Ida Rossini</span><span class="d">*1859? †VI.1949</span></div><ul><li><div class="person"><span class="n">Luigi</span><span class="d">*4.III.1881 †20.IX.1949</span><span class="d">⚭ Filomena Camilla Prigione</span><span class="d">*26.III.1879 †16.III.1957</span></div><ul><li><div class="person"><span class="n">Luigi Rodolfo</span><span class="d">*31.X.1908 †4.XII.1953</span><span class="d">⚭ Irma Boscolo</span><span class="d">*1907 †?</span></div><ul><li><div class="person"><span class="n">Federica</span><span class="d">*III.1940 *?</span><span class="d">⚭ Giorgio Orlandini</span><span class="d">*1933 †?</span></div></li></ul></li><li><div class="person"><span class="n">Maria Luisa</span><span class="d">*28.XII.1912 †22.IV.2010</span><span class="d">⚭ Francesco Capella</span><span class="d">*20.V.1909 †31.I.1996</span></div><ul><li><div class="person"><span class="n">Maria Michela</span><span class="d">24.II.1947</span><span class="d">⚭ Carlo Poggio</span><span class="d">*7.II.1945</span></div><ul><li><div class="person"><span class="n">Emiliano</span><span class="d">*1.VII.1974</span><span class="d">⚭ Maura Murgia</span><span class="d">*21.XII.1970</span></div><ul><li><div class="person"><span class="n">Giovanni Maria</span><span class="d">*9.XII.2015</span></div></li></ul></li><li><div class="person"><span class="n">Emanuele</span><span class="d">*12.IX.1984</span><span class="d">⚭ Rachelle LaLonde</span><span class="d">*17.VIII.1987</span></div><ul><li><div class="person"><span class="n">Enea Ellery</span><span class="d">*11.I.2024</span></div></li></ul></li></ul></li></ul></li></ul></li><li><div class="person"><span class="n">Mario</span><span class="d">*1882 †1912</span></div></li><li><div class="person"><span class="n">Maria</span><span class="d">*1887 †15.IV.1887</span></div></li><li><div class="person"><span class="n">Rachele</span><span class="d">*1889 †VIII.1960</span><span class="d">⚭ Felice Atzori</span><span class="d">*9.IX.1889 †8.III.1957</span></div><ul><li><div class="person"><span class="n">Giovanni</span><span class="d">*1922 †1998</span><span class="d">⚭ Ermelinda Cavazzuti</span><span class="d">*5.I.1926 †3.V.2002</span></div><ul><li><div class="person"><span class="n">Elena</span><span class="d">*? †?</span><span class="d">⚭ Franco Cattaneo</span><span class="d">*? †?</span></div><ul><li><div class="person"><span class="n">Iacopo</span><span class="d">*9.V.1990</span></div></li></ul></li></ul></li><li><div class="person"><span class="n">Giulio</span><span class="d">*9.II.1928 †10.IV.2015</span><span class="d">⚭ Piera Scala</span><span class="d">*22.VIII.1929 †29.X.2003</span></div><ul><li><div class="person"><span class="n">Massimo</span><span class="d">*2.VI.1959</span><span class="d">⚭ Anna Venturelli</span><span class="d">*1.V.1965</span></div><ul><li><div class="person"><span class="n">Cecilia</span><span class="d">*2.III.1993</span></div></li><li><div class="person"><span class="n">Lorenzo</span><span class="d">*10.V.1998</span></div></li></ul></li><li><div class="person"><span class="n">Marcello</span><span class="d">*XII.1970</span><span class="d">⚭ Giovanna Iadanza</span><span class="d">*12.X.1972</span></div><ul><li><div class="person"><span class="n">Emili</span><span class="d">*2.III.2005</span></div></li></ul></li></ul></li></ul></li><li><div class="person"><span class="n">Maria</span><span class="d">*2.I.1896 †11.II.1985</span><span class="d">⚭ Vittorio Gatti</span><span class="d">*13.V.1889 †17.II.1973</span></div><ul><li><div class="person"><span class="n">Fernando</span><span class="d">*11.III.1924 †9.V.1998</span><span class="d">⚭ Nadia Brenco</span><span class="d">*24.IV.1933</span></div></li><li><div class="person"><span class="n">Gioconda</span><span class="d">*10.I.1928</span><span class="d">⚭ Domenico Alberti</span><span class="d">*22.VIII.1923 †28.XI.2011</span></div><ul><li><div class="person"><span class="n">Laura</span><span class="d">*8.VI.1953</span><span class="d">⚭ Lorenzo Mortola</span><span class="d">*6.V.1954</span></div><ul><li><div class="person"><span class="n">Paola</span><span class="d">*25.VIII.1985</span><span class="d">⚭ Marco Pedretti</span><span class="d">*16.I.1985</span></div><ul><li><div class="person"><span class="n">Sofia</span><span class="d">*11.X.2023</span></div></li><li><div class="person hl"><span class="n">Luca</span><span class="d">*31.VII.2026</span></div></li></ul></li></ul></li><li><div class="person"><span class="n">Maria Luisa</span><span class="d">*25.XII.1955</span><span class="d">⚭ Fulvio Gaggero</span><span class="d">*1.XII.1954</span></div><ul><li><div class="person"><span class="n">Silvia</span><span class="d">*27.X.1990</span></div></li></ul></li></ul></li></ul></li><li><div class="person"><span class="n">Irene</span><span class="d">*? †?</span><span class="d">⚭ Teresio Maggioni</span><span class="d">*? †?</span></div><ul><li><div class="person"><span class="n">Rodolfo</span><span class="d">*1908 †5.X.1980</span><span class="d">⚭ Angela Spinolo</span><span class="d">*1919 †2003</span></div><ul><li><div class="person"><span class="n">Riccardo</span><span class="d">*?</span><span class="d">⚭</span><span class="d">*? †?</span></div></li></ul></li><li><div class="person"><span class="n">Bianca</span><span class="d">*1912 †?</span><span class="d">⚭ Luciano Cornaglia</span><span class="d">*? †?</span></div></li></ul></li></ul></li></ul></li></ul></li></ul></div>
+  <div id="hint">Trascina per spostarti &middot; rotella o pizzico per ingrandire</div>
+  <div id="legend">* nascita &middot; &dagger; morte &middot; &#x26AD; matrimonio &middot; ~ circa &middot; <i>Nomen nescio</i>: nome non noto</div>
+  <div id="controls">
+    <button id="zout" aria-label="Riduci">&minus;</button>
+    <button id="zin" aria-label="Ingrandisci">+</button>
+    <button id="fit" aria-label="Adatta alla finestra">Adatta</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var vp=document.getElementById('viewport'),cv=document.getElementById('canvas');
+  var s=1,tx=0,ty=0,MIN=.06,MAX=3;
+
+  function apply(){cv.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}
+  function size(){return{w:cv.scrollWidth,h:cv.scrollHeight};}
+  function fit(){
+    var r=vp.getBoundingClientRect(),c=size();
+    s=Math.min(r.width/c.w,r.height/c.h)*.97;
+    s=Math.max(MIN,Math.min(MAX,s));
+    tx=(r.width-c.w*s)/2;ty=(r.height-c.h*s)/2;apply();
+  }
+  function zoomAt(f,px,py){
+    var ns=Math.max(MIN,Math.min(MAX,s*f));f=ns/s;
+    tx=px-(px-tx)*f;ty=py-(py-ty)*f;s=ns;apply();
+  }
+
+  vp.addEventListener('wheel',function(e){
+    e.preventDefault();
+    var r=vp.getBoundingClientRect();
+    zoomAt(Math.pow(1.0015,-e.deltaY),e.clientX-r.left,e.clientY-r.top);
+  },{passive:false});
+
+  var pts=new Map(),lastMid=null,lastDist=0;
+  vp.addEventListener('pointerdown',function(e){
+    vp.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===1)vp.classList.add('grabbing');
+    lastMid=null;
+  });
+  vp.addEventListener('pointermove',function(e){
+    if(!pts.has(e.pointerId))return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    var a=[].concat.apply([],[Array.from(pts.values())]);
+    if(pts.size===1){
+      if(lastMid){tx+=a[0].x-lastMid.x;ty+=a[0].y-lastMid.y;apply();}
+      lastMid={x:a[0].x,y:a[0].y};
+    }else if(pts.size===2){
+      var mid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};
+      var d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+      if(lastMid&&lastDist){
+        var r=vp.getBoundingClientRect();
+        zoomAt(d/lastDist,mid.x-r.left,mid.y-r.top);
+        tx+=mid.x-lastMid.x;ty+=mid.y-lastMid.y;apply();
+      }
+      lastMid=mid;lastDist=d;
+    }
+  });
+  function up(e){pts.delete(e.pointerId);lastMid=null;lastDist=0;if(!pts.size)vp.classList.remove('grabbing');}
+  vp.addEventListener('pointerup',up);vp.addEventListener('pointercancel',up);
+
+  vp.addEventListener('dblclick',function(e){
+    var r=vp.getBoundingClientRect();
+    zoomAt(1.6,e.clientX-r.left,e.clientY-r.top);
+  });
+  vp.addEventListener('keydown',function(e){
+    var r=vp.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,p=40;
+    if(e.key==='+'||e.key==='=')zoomAt(1.2,cx,cy);
+    else if(e.key==='-')zoomAt(1/1.2,cx,cy);
+    else if(e.key==='0')fit();
+    else if(e.key==='ArrowLeft'){tx+=p;apply();}
+    else if(e.key==='ArrowRight'){tx-=p;apply();}
+    else if(e.key==='ArrowUp'){ty+=p;apply();}
+    else if(e.key==='ArrowDown'){ty-=p;apply();}
+    else return;
+    e.preventDefault();
+  });
+
+  var r=vp.getBoundingClientRect();
+  document.getElementById('zin').onclick=function(){var q=vp.getBoundingClientRect();zoomAt(1.25,q.width/2,q.height/2);};
+  document.getElementById('zout').onclick=function(){var q=vp.getBoundingClientRect();zoomAt(1/1.25,q.width/2,q.height/2);};
+  document.getElementById('fit').onclick=fit;
+  window.addEventListener('resize',fit);
+
+  fit();
+  setTimeout(function(){var h=document.getElementById('hint');h.style.opacity=0;setTimeout(function(){h.remove();},700);},4500);
+})();
+</script>
+</body>
+</html>
